@@ -1,0 +1,11 @@
+Pulling in Currencies is in App\Controllers CurrencyController
+web.php is my routes file to gain access to the controller method.
+The test for this is found in tests/AustrlianDollarsTest
+
+Examples of DESIGN pattern for factory can be found in the testing files as well as currencyFactory
+Example of strategy design pattern can be found in CurrencyService (Wish I spent more time on this) as well as inside of Currency.php in the currency model.
+Changed my mind with this twice as I wasn't sure how to properly achieve this to be honest, not something i've come across.
+
+
+You can find the vue.js form at public/resources/views/form.vue
+App file at resources/app.js
