@@ -23,7 +23,7 @@ class CurrencyService
 //                $strategy = new UkTaxStrategy;
 //                break;
 //            default:
-//                throw new \Exception('Strategy not found for this category.');
+//                throw new \Exception('Strategy not found for this currency.');
 //        }
 //    }
 //}
