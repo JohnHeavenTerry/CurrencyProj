@@ -21,7 +21,7 @@ class CurrencyService
      */
     public function getCurrencyByType($type) {
         try {
-            //Grab XML Sheet from Endpoint
+            // Grab XML Sheet from Endpoint
             $xml = simplexml_load_file($this->currencyUrl);
 
             // Loop through all currencies until you find desired currency
@@ -36,7 +36,7 @@ class CurrencyService
             Currency::create([
                 'currency' => $currencyDetails->currency,
                 'type' => $currencyDetails->type,
-                'date' =>$currencyDetails->date
+                'date' => $currencyDetails->date
             ]);
 
             // return response packaged up as json with status code.
@@ -68,9 +68,12 @@ class CurrencyService
                 throw new \Exception('Strategy not found for this currency.');
         }
 
+        // Get taxed amount based off passed in currency type
         $taxCurrencyCalculation = new TaxCurrencyCalculation($strategy);
         $taxCurrencyCalculation->calculateTax();
 
+
+        // return Exchange Value
         return $currency->getExchange();
     }
 }
