@@ -1,3 +1,4 @@
+-----BACKEND---- TASK 1 & 2
 Pulling in Currencies is in App\Controllers CurrencyController
 which references currencyService in app/Service/CurrencyService;
 
@@ -8,5 +9,14 @@ Examples of DESIGN pattern for factory can be found in the testing files as well
 Example of strategy design pattern can be found in CurrencyService (getTaxedStatergy) which references tax calulator interface in app/interfaces
 as well as other strategies in the app/strategies/currencies section
 
+
+-----FRONTEND----- TASK 3
+
 You can find the vue.js form at public/resources/views/form.vue
-App file at resources/app.js
+this uses vuelidate libary for validation on form components
+uses axios post as a means to sending a request to our backend to save form data if we require it.
+I've imported SWAL as its a nice libary which gives us good UI Components that look modern.
+Just uses Localstorage to save information.
+
+App file at resources/app.js which includes all the imports and references to desired files.
+
