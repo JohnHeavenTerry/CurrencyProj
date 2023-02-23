@@ -72,7 +72,6 @@ class CurrencyService
         $taxCurrencyCalculation = new TaxCurrencyCalculation($strategy);
         $taxCurrencyCalculation->calculateTax();
 
-
         // return Exchange Value
         return $currency->getExchange();
     }

@@ -98,15 +98,14 @@ export default {
             this.validate.validate();
             if(!this.validate.$error) {
                 alert('Form Submitted');
+                localStorage.email = this.userData.email;
+                localStorage.password = this.userData.password;
+                localStorage.satisfaction = this.userData.satisfaction;
+                localStorage.message = this.message;
+                localStorage.radioBoxOption = this.radioBoxOption;
             } else {
                 alert('Form Failed Validation');
             }
-
-            localStorage.email = this.userData.email;
-            localStorage.password = this.userData.password;
-            localStorage.satisfaction = this.userData.satisfaction;
-            localStorage.message = this.message;
-            localStorage.radioBoxOption = this.radioBoxOption;
         },
 
         // Save Form Data into Database {{Endpoint not written for this!}}
