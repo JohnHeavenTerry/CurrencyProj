@@ -45,6 +45,8 @@
 </template>
 
 <script>
+import { store } from './store.js'
+
 export default {
     data() {
         return {
@@ -62,6 +64,8 @@ export default {
         submitted() {
             this.isSubmitted = true;
         },
+
+        // Save Form Data into Database {{Endpoint not written for this!}}
         saveFormData() {
             axios.post("/form/save-data", {
                     user: this.userData,

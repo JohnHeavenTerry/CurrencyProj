@@ -11,9 +11,15 @@ class Currency extends Model
 {
     use HasFactory;
 
+    // Type Constants
+    const AUS = 'AUD';
+    const USA = 'USD';
+    const UK = 'GBP';
+
+    // Model Values
     private string $currency;
     private string $type;
-    private date $date;
+    private string $date;
     private int $exchange;
 
     /**
@@ -78,9 +84,10 @@ class Currency extends Model
     }
 
     /**
-     * @return dateTime
+     * @return date
+     * Probably doesn't work. Date doesn't exist as a php Variable type.
      */
-    public function getDate(): dateTime
+    public function getDate(): date
     {
         return $this->date;
     }
@@ -96,7 +103,7 @@ class Currency extends Model
     }
 
     /**
-     * @return dateTime
+     * @return int
      */
     public function getExchange(): int
     {

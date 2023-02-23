@@ -6,7 +6,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Capsule\Manager as DB;
 
 
-class austrlianDollarsTest extends TestCase
+class AustrlianDollarsTest extends TestCase
 {
     public function setUp(): void {
         parent::setUp();
@@ -29,8 +29,11 @@ class austrlianDollarsTest extends TestCase
         $this->get('/currency/australian-dollars')
             ->assertStatus(200)
             ->assertJson([
-                'targetCurrency' => 'Australian Dollar',
-                'baseName' => 'U.K. Pound Sterling'
+                [
+                    'targetName' => 'Australian Dollar',
+                    'baseName' => 'U.K. Pound Sterling',
+                    'targetCurrency' => Currency::AUS
+                ]
             ]);
     }
 }

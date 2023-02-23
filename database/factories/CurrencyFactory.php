@@ -30,7 +30,7 @@ class CurrencyFactory extends Factory
      */
     public function australianState() {
         return [
-            'type' => 'Australian Dollar'
+            'type' => 'AUD'
         ];
     }
 }

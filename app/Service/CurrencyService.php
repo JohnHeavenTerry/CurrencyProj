@@ -1,115 +1,76 @@
 <?php
 
 namespace App\Service;
+
 use App\Models\Currency;
+use App\Stategy\ {
+    TaxCurrencyCalculation,
+    Currencies\AuTaxStrategy,
+    Currencies\UkTaxStrategy,
+    Currencies\UsTaxStrategy
+};
 
 class CurrencyService
 {
+    private $currencyUrl = 'http://www.floatrates.com/daily/gbp.xml';
 
-//    public function getTaxedCurrency($type) {
-//        $currency = new Currency;
-//        $currency->setType('Australian Dollar')
-//            ->setCurrency('United Kingdom Pound')
-//            ->setDate('2023-02-22');
-//
-//        switch ($currency->type()) {
-//            case 'Austrlian Dollar':
-//                $strategy = new AusTaxStrategy;
-//                break;
-//            case 'United States Dollar':
-//                $strategy = new UsTaxStrategy;
-//                break;
-//            case 'United Kingdom Pound':
-//                $strategy = new UkTaxStrategy;
-//                break;
-//            default:
-//                throw new \Exception('Strategy not found for this currency.');
-//        }
-//    }
-//}
-//
-//interface TaxCalculatorStrategy
-//{
-//    public function calculate(Currency $currency): float;
-//}
-//
-//class UsTaxStrategy implements TaxCalculatorStrategy
-//{
-//    const TAX_RATE = 30.0;
-//
-//    public function calculate(Currency $currency): float
-//    {
-//        return $currency->getExchange() * (self::TAX_RATE / 100);
-//    }
-//}
-//
-//class UkTaxStrategy implements TaxCalculatorStrategy
-//{
-//    const TAX_RATE = 40.0;
-//
-//    public function calculate(Currency $currency): float
-//    {
-//        return $currency->getExchange() * (self::TAX_RATE / 100);
-//    }
-//}
-//
-//class AusTaxStrategy implements TaxCalculatorStrategy
-//{
-//    const TAX_RATE = 40.0;
-//
-//    public function calculate(Currency $currency): float
-//    {
-//        return $currency->getExchange() * (self::TAX_RATE / 100);
-//    }
-//}
-//
-//
-//class TaxFreeStrategy implements TaxCalculatorStrategy
-//{
-//    public function calculate(Currency $currency): float
-//    {
-//        return 0;
-//    }
-}
+    /**
+     * @param $type
+     * @return $currencyArray
+     * @return \Exception|false|Exception|\SimpleXMLElement|null
+     */
+    public function getCurrencyByType($type) {
+        try {
+            //Grab XML Sheet from Endpoint
+            $xml = simplexml_load_file($this->currencyUrl);
 
+            // Loop through all currencies until you find desired currency
+            foreach($xml->item as $currency) {
+                if($currency->targetCurrency == $type) {
+                    $currencyDetails = $currency;
+                    break;
+                }
+            }
 
-/** OR? */
+            // Save In Database Updated Currencies amount.
+            Currency::create([
+                'currency' => $currencyDetails->currency,
+                'type' => $currencyDetails->type,
+                'date' =>$currencyDetails->date
+            ]);
 
-
-/**
- * Strategy implementation for using multiple classes for interface.
- */
-interface OutputInterface
-{
-    public function load();
-}
-
-/*
- * Serialise output of the array
- */
-class SerializedArrayOutput implements OutputInterface
-{
-    public function load($arrayOfData = []) {
-        return serialize($arrayOfData);
+            // return response packaged up as json with status code.
+            return $currencyDetails;
+        } catch (\Exception $error) {
+            return $error;
+        }
     }
-}
 
-/*
- * convert to json
- */
-class JsonStringOutput implements OutputInterface
-{
-    public function load($arrayOfData = []) {
-        return json_encode($arrayOfData);
-    }
-}
+    /**
+     * @param Currency $currency
+     * @return \App\Models\Currency\exchange|int
+     * @throws \Exception
+     * Loops through different types
+     * calculates tax dependent on currency
+     */
+    public function setTaxedCurrency(Currency $currency) {
+        switch ($currency->getType()) {
+            case Currency::AUS:
+                $strategy = new AuTaxStrategy;
+                break;
+            case Currency::USA:
+                $strategy = new UsTaxStrategy;
+                break;
+            case Currency::UK:
+                $strategy = new UkTaxStrategy;
+                break;
+            default:
+                throw new \Exception('Strategy not found for this currency.');
+        }
 
-/*
- * return array output.
- */
-class ArrayOutput implements OutputInterface
-{
-    public function load($arrayOfData = []) {
-        return $arrayOfData;
+        $taxCurrencyCalculation = new TaxCurrencyCalculation($strategy);
+        $taxCurrencyCalculation->calculateTax();
+
+        return $currency->getExchange();
     }
 }
